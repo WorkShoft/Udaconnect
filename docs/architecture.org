@@ -1,0 +1,33 @@
+#+OPTIONS: ^:nil
+#+TITLE: Architecture Docs
+
+*Persons API
+** Port
+5000
+** Endpoints
+*** /persons
+*** /persons/<person_id>
+*** /persons/<person_id>/connection
+** Services 
+*** ConnectionService.find_contacts()
+This service calls the /locations/< to get a person's location from the Locations API.
+
+* Locations API
+** Port
+5001
+** Endpoints
+*** /locations
+*** /locations/<location_id>
+*** /locations/<person_id>/[?start_date|end_date]
+
+** Connection class
+Both microservices consume the Connection class, which uses gRPC to encapsulate Person and Location details.
+
+This is one of the major refactors to the original code, since it used SQLAlchemy models instead of gPRC messages.
+
+#+BEGIN_SRC python3
+@dataclass
+class Connection:
+    location: LocationMessage
+    person: PersonMessage
+#+END_SRC
