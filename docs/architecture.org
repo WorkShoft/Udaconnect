@@ -10,7 +10,14 @@
 *** /persons/<person_id>/connection
 ** Services 
 *** ConnectionService.find_contacts()
-This service calls the /locations/< to get a person's location from the Locations API.
+** Locations API dependencies
+- ConnectionService.create()
+- ConnectionService.find_contacts()
+This service calls the /locations/ endpoint to get a person's location from the Locations API.
+- ConnectionSchema
+- LocationService
+- LocationService.retrieve()
+- LocationService.create()
 
 * Locations API
 ** Port

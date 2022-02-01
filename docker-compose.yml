@@ -1,0 +1,21 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+
+  db:
+    image: postgis/postgis
+    restart: always
+    environment:
+      DB_USERNAME: "ct_admin"
+      DB_NAME: "geoconnections"
+      DB_PORT: 5432
+      DB_PASSWORD: "wowimsosecure"
+      DB_HOST: "localhost"
+      POSTGRES_USER: "ct_admin"
+      POSTGRES_DB: "geoconnections"
+      POSTGRES_PORT: 5432
+      POSTGRES_PASSWORD: "wowimsosecure"
+      POSTGRES_HOST: "localhost"
+    ports:
+      - "5432:5432"
