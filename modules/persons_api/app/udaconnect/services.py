@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List
 
 import sqlalchemy
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from app import db
 from app.udaconnect.locations_client import LocationsClient
@@ -36,40 +36,38 @@ class ConnectionService:
         # Cache all users in memory for quick lookup
         person_map: Dict[str, Person] = {person.id: person for person in PersonService.retrieve_all()}
 
-        # Prepare arguments for queries
-        for location in locations:
-            location["start_date"] = start_date.strftime("%Y-%m-%d")
-            location["end_date"] = (end_date + timedelta(days=1)).strftime("%Y-%m-%d")
-            location["meters"] = meters
-
         result: List[Connection] = []
 
-        for line in locations:
-            location = db.session.query(Location) \
-                .with_entities(Location.coordinate, Location.id, Location.person_id, func.st_x(Location.coordinate), func.st_y(Location.coordinate), Location.creation_time) \
-                .filter(
-                func.ST_DWithin(
-                    sqlalchemy.sql.text(
-                        f"coordinate::geography,ST_SetSRID(ST_MakePoint({line.get('latitude')},{line.get('longitude')}),4326)::geography, {line.get('meters')}")
+        for loc in locations:
+            loc["start_date"] = start_date.strftime("%Y-%m-%d")
+            loc["end_date"] = (end_date + timedelta(days=1)).strftime("%Y-%m-%d")
+
+            query = db.session.query(Location) \
+                .with_entities(Location.coordinate, Location.id, Location.person_id, func.st_x(Location.coordinate).label("latitude"), func.st_y(Location.coordinate).label("longitude"), Location.creation_time) \
+                .filter(and_(
+                    func.ST_DWithin(
+                        sqlalchemy.sql.text(
+                            f"coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters}")
+                    ),
+                    Location.person_id != loc.get("person_id"),
+                    datetime.strptime(loc.get("start_date"), '%Y-%m-%d') <= Location.creation_time,
+                    datetime.strptime(loc.get("end_date"), '%Y-%m-%d') > Location.creation_time
                 )
             ) \
-                .filter(Location.person_id != line.get("person_id")) \
-                .filter(datetime.strptime(line.get("start_date"), '%Y-%m-%d') <= Location.creation_time) \
-                .filter(datetime.strptime(line.get("end_date"), '%Y-%m-%d') > Location.creation_time) \
                 .first()
 
-            location = Location(
-                    id=location.id,
-                    person_id=location.person_id,
-                    creation_time=location.creation_time,
-                    coordinate=location.coordinate
+            location_object = Location(
+                    id=query.id,
+                    person_id=query.person_id,
+                    creation_time=query.creation_time,
+                    coordinate=query.coordinate
                 )
 
-            location.set_wkt_with_coords(location.latitude, location.longitude)
+            location_object.set_wkt_with_coords(query.latitude, query.longitude)
 
             result.append(
                 Connection(
-                    person=person_map.get(location.person_id), location=location,
+                    person=person_map.get(location_object.person_id), location=location_object,
                 )
             )
 
