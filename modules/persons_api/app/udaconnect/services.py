@@ -2,6 +2,9 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List
 
+import sqlalchemy
+from sqlalchemy import func
+
 from app import db
 from app.udaconnect.locations_client import LocationsClient
 from app.udaconnect.models import Connection, Location, Person
@@ -23,6 +26,8 @@ class ConnectionService:
         This will run rather quickly locally, but this is an expensive method and will take a bit of time to run on
         large datasets. This is by design: what are some ways or techniques to help make this data integrate more
         smoothly for a better user experience for API consumers?
+
+        TODO: pagination
         """
 
         locations_client = LocationsClient()
@@ -36,40 +41,37 @@ class ConnectionService:
             location["start_date"] = start_date.strftime("%Y-%m-%d")
             location["end_date"] = (end_date + timedelta(days=1)).strftime("%Y-%m-%d")
             location["meters"] = meters
-            del location["creation_time"]
-            del location["id"]
 
-        query = text(
-            """
-        SELECT  person_id, id, ST_X(coordinate), ST_Y(coordinate), creation_time
-        FROM    location
-        WHERE   ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint(:latitude,:longitude),4326)::geography, :meters)
-        AND     person_id != :person_id
-        AND     TO_DATE(:start_date, 'YYYY-MM-DD') <= creation_time
-        AND     TO_DATE(:end_date, 'YYYY-MM-DD') > creation_time;
-        """
-        )
         result: List[Connection] = []
-        for line in tuple(locations):
-            for (
-                exposed_person_id,
-                location_id,
-                exposed_lat,
-                exposed_long,
-                exposed_time,
-            ) in db.engine.execute(query, **line):
-                location = Location(
-                    id=location_id,
-                    person_id=exposed_person_id,
-                    creation_time=exposed_time,
-                )
-                location.set_wkt_with_coords(exposed_lat, exposed_long)
 
-                result.append(
-                    Connection(
-                        person=person_map[exposed_person_id], location=location,
-                    )
+        for line in locations:
+            location = db.session.query(Location) \
+                .with_entities(Location.coordinate, Location.id, Location.person_id, func.st_x(Location.coordinate), func.st_y(Location.coordinate), Location.creation_time) \
+                .filter(
+                func.ST_DWithin(
+                    sqlalchemy.sql.text(
+                        f"coordinate::geography,ST_SetSRID(ST_MakePoint({line.get('latitude')},{line.get('longitude')}),4326)::geography, {line.get('meters')}")
                 )
+            ) \
+                .filter(Location.person_id != line.get("person_id")) \
+                .filter(datetime.strptime(line.get("start_date"), '%Y-%m-%d') <= Location.creation_time) \
+                .filter(datetime.strptime(line.get("end_date"), '%Y-%m-%d') > Location.creation_time) \
+                .first()
+
+            location = Location(
+                    id=location.id,
+                    person_id=location.person_id,
+                    creation_time=location.creation_time,
+                    coordinate=location.coordinate
+                )
+
+            location.set_wkt_with_coords(location.latitude, location.longitude)
+
+            result.append(
+                Connection(
+                    person=person_map.get(location.person_id), location=location,
+                )
+            )
 
         return result
 
