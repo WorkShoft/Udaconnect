@@ -43,13 +43,13 @@ class LocationResource(Resource):
 class LocationResource(Resource):
 
     @responds(schema=LocationSchema, many=True)
-    def get(self, person_id) -> List:
+    def get(self, person_id):
         end_date = request.args.get("end_date")
         end_date = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
         start_date = request.args.get("start_date")
         start_date = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
 
-        locations: List = db.session.query(Location).filter(
+        locations = db.session.query(Location).filter(
             Location.person_id == person_id
         ).filter(Location.creation_time < end_date).filter(
             Location.creation_time >= start_date

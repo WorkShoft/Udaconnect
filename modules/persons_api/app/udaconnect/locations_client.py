@@ -22,6 +22,4 @@ class LocationsClient:
 
         locations = requests.get(f'http://{LOCATIONS_HOST}:{LOCATIONS_PORT}/locations_api/locations/persons/{person_id}?start_date={start_date}&end_date={end_date}', auth=('user', 'pass'))
 
-        data = json.loads(locations.content)
-
-        return data
+        return locations.json()

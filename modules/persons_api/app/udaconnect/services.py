@@ -19,7 +19,7 @@ logger = logging.getLogger("udaconnect-persons_api")
 class ConnectionService:
     @staticmethod
     def find_contacts(person_id: int, start_date: datetime, end_date: datetime, meters=5
-    ) -> List[Connection]:
+                      ) -> List[Connection]:
         """
         Finds all Person who have been within a given distance of a given Person within a date range.
 
@@ -39,37 +39,26 @@ class ConnectionService:
         result: List[Connection] = []
 
         for loc in locations:
-            loc["start_date"] = start_date.strftime("%Y-%m-%d")
-            loc["end_date"] = (end_date + timedelta(days=1)).strftime("%Y-%m-%d")
-
-            query = db.session.query(Location) \
-                .with_entities(Location.coordinate, Location.id, Location.person_id, func.st_x(Location.coordinate).label("latitude"), func.st_y(Location.coordinate).label("longitude"), Location.creation_time) \
+            location = db.session.query(Location) \
                 .filter(and_(
-                    func.ST_DWithin(
-                        sqlalchemy.sql.text(
-                            f"coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters}")
-                    ),
-                    Location.person_id != loc.get("person_id"),
-                    datetime.strptime(loc.get("start_date"), '%Y-%m-%d') <= Location.creation_time,
-                    datetime.strptime(loc.get("end_date"), '%Y-%m-%d') > Location.creation_time
-                )
+                    text(
+                        f"ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters})")
+                    ,
+                    Location.person_id != int(person_id),
+                    start_date <= Location.creation_time,
+                    end_date + timedelta(days=1) > Location.creation_time
+            )
             ) \
                 .first()
 
-            location_object = Location(
-                    id=query.id,
-                    person_id=query.person_id,
-                    creation_time=query.creation_time,
-                    coordinate=query.coordinate
-                )
+            if location:
+                location.set_wkt_with_coords(location.latitude, location.longitude)
 
-            location_object.set_wkt_with_coords(query.latitude, query.longitude)
-
-            result.append(
-                Connection(
-                    person=person_map.get(location_object.person_id), location=location_object,
+                result.append(
+                    Connection(
+                        person=person_map.get(location.person_id), location=location,
+                    )
                 )
-            )
 
         return result
 
@@ -79,8 +68,8 @@ class LocationService:
     def retrieve(location_id) -> Location:
         location, coord_text = (
             db.session.query(Location, Location.coordinate.ST_AsText())
-            .filter(Location.id == location_id)
-            .one()
+                .filter(Location.id == location_id)
+                .one()
         )
 
         # Rely on database to return text form of point to reduce overhead of conversion in app code
