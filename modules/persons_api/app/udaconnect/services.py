@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List
 
 import sqlalchemy
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, or_
 
 from app import db
 from app.udaconnect.locations_client import LocationsClient
@@ -18,7 +18,7 @@ logger = logging.getLogger("udaconnect-persons_api")
 
 class ConnectionService:
     @staticmethod
-    def find_contacts(person_id: int, start_date: datetime, end_date: datetime, meters=5
+    def find_contacts(person_id: int, start_date: datetime, end_date: datetime, page=1, meters=5
                       ) -> List[Connection]:
         """
         Finds all Person who have been within a given distance of a given Person within a date range.
@@ -30,37 +30,46 @@ class ConnectionService:
         TODO: pagination
         """
 
+        page_size = 10  # results per page
         locations_client = LocationsClient()
         locations: List = locations_client.get_location_list(person_id, start_date, end_date)
 
         # Cache all users in memory for quick lookup
         person_map: Dict[str, Person] = {person.id: person for person in PersonService.retrieve_all()}
 
-        result: List[Connection] = []
+        data: List[Connection] = []
+
+        query = db.session.query(Location)
+
+        conditions = []
 
         for loc in locations:
-            location = db.session.query(Location) \
-                .filter(and_(
-                    text(
-                        f"ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters})")
-                    ,
-                    Location.person_id != int(person_id),
-                    start_date <= Location.creation_time,
-                    end_date + timedelta(days=1) > Location.creation_time
+            conditions.append(and_(
+                text(
+                    f"ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters})")
+                ,
+                Location.person_id != int(person_id),
+                start_date <= Location.creation_time,
+                end_date + timedelta(days=1) > Location.creation_time,
             )
-            ) \
-                .first()
+            )
 
-            if location:
-                location.set_wkt_with_coords(location.latitude, location.longitude)
+        query = query.filter(or_(*conditions))
 
-                result.append(
-                    Connection(
-                        person=person_map.get(location.person_id), location=location,
-                    )
+        query = query \
+            .limit(page_size) \
+            .offset(page_size * (page - 1))
+
+        for result in query:
+            result.set_wkt_with_coords(result.latitude, result.longitude)
+
+            data.append(
+                Connection(
+                    person=person_map.get(result.person_id), location=result,
                 )
+            )
 
-        return result
+        return data
 
 
 class LocationService:

@@ -5,7 +5,7 @@ from app.udaconnect.schemas import (
     ConnectionSchema,
     PersonSchema,
 )
-from app.udaconnect.services import ConnectionService, PersonService
+from app.udaconnect.services import PersonService, ConnectionService
 from flask import request
 from flask_accepts import accepts, responds
 from flask_restx import Namespace, Resource
@@ -43,6 +43,7 @@ class PersonResource(Resource):
 @api.route("/persons/<person_id>/connection")
 @api.param("start_date", "Lower bound of date range", _in="query")
 @api.param("end_date", "Upper bound of date range", _in="query")
+@api.param("page", "Page number", _in="query")
 @api.param("distance", "Proximity to a given user in meters", _in="query")
 class ConnectionDataResource(Resource):
     @responds(schema=ConnectionSchema, many=True)
@@ -52,11 +53,13 @@ class ConnectionDataResource(Resource):
         )
         end_date: datetime = datetime.strptime(request.args["end_date"], DATE_FORMAT)
         distance: Optional[int] = request.args.get("distance", 5)
+        page: Optional[int] = request.args.get("page", 1)
 
         results = ConnectionService.find_contacts(
             person_id=person_id,
             start_date=start_date,
             end_date=end_date,
             meters=distance,
+            page=page
         )
         return results
