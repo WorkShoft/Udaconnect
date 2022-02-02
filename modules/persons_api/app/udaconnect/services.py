@@ -54,9 +54,9 @@ class ConnectionService:
             )
             )
 
-        query = query.filter(or_(*conditions))
-
         query = query \
+            .filter(or_(*conditions)) \
+            .distinct() \
             .limit(page_size) \
             .offset(page_size * (page - 1))
 

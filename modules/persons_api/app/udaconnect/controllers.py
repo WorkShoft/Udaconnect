@@ -53,7 +53,7 @@ class ConnectionDataResource(Resource):
         )
         end_date: datetime = datetime.strptime(request.args["end_date"], DATE_FORMAT)
         distance: Optional[int] = request.args.get("distance", 5)
-        page: Optional[int] = request.args.get("page", 1)
+        page: Optional[int] = int(request.args.get("page", 1))
 
         results = ConnectionService.find_contacts(
             person_id=person_id,
