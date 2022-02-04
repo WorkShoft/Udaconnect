@@ -1,7 +1,4 @@
-from datetime import timedelta
-
 import grpc
-
 
 LOCATIONS_PORT = "5001"
 LOCATIONS_HOST = "localhost"
@@ -32,9 +29,4 @@ class LocationsClient:
 
         response = stub.Create(request)
 
-        locations = response.locations
-
-        # locations = requests.get(f'http://{LOCATIONS_HOST}:{LOCATIONS_PORT}/locations_api/locations/persons/{person_id}?start_date={start_date}&end_date={end_date}', auth=('user', 'pass'))
-        #return locations.json()
-
-        return locations
+        return response.locations

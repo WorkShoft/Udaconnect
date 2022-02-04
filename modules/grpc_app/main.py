@@ -27,12 +27,6 @@ class LocationServicer(location_pb2_grpc.LocationServiceServicer):
 
         with app.app_context():
             locations = db.session.query(Location) \
-                .with_entities(
-                    Location.id,
-                    Location.creation_time,
-                    func.st_x(Location.coordinate).label("longitude"),
-                    func.st_y(Location.coordinate).label("latitude"),
-                    Location.person_id) \
                 .filter(Location.person_id == request.person_id) \
                 .filter(Location.creation_time < end_date) \
                 .filter(Location.creation_time >= start_date) \
@@ -43,8 +37,8 @@ class LocationServicer(location_pb2_grpc.LocationServiceServicer):
                     LocationMessage(
                         id=row.id,
                         creation_time=datetime.strftime(row.creation_time, "%Y-%m-%d"),
-                        longitude=row.longitude,
-                        latitude=row.latitude,
+                        longitude=float(row.longitude),
+                        latitude=float(row.latitude),
                         person_id=row.person_id,
                     )
                 )
