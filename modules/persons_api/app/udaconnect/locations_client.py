@@ -1,12 +1,16 @@
-from typing import List
+from datetime import timedelta
 
-import requests
-from flask import json
+import grpc
 
-from app.udaconnect.schemas import LocationSchema
 
 LOCATIONS_PORT = "5001"
 LOCATIONS_HOST = "localhost"
+GRPC_PORT = 5005
+channel = grpc.insecure_channel(f"localhost:{GRPC_PORT}")
+
+from modules.grpc_app import location_pb2, location_pb2_grpc
+
+stub = location_pb2_grpc.LocationServiceStub(channel)
 
 
 class LocationsClient:
@@ -20,6 +24,17 @@ class LocationsClient:
         :return:
         """
 
-        locations = requests.get(f'http://{LOCATIONS_HOST}:{LOCATIONS_PORT}/locations_api/locations/persons/{person_id}?start_date={start_date}&end_date={end_date}', auth=('user', 'pass'))
+        request = location_pb2.Request(
+            person_id=int(person_id),
+            start_date=start_date.strftime("%Y-%m-%d"),
+            end_date=end_date.strftime("%Y-%m-%d"),
+        )
 
-        return locations.json()
+        response = stub.Create(request)
+
+        locations = response.locations
+
+        # locations = requests.get(f'http://{LOCATIONS_HOST}:{LOCATIONS_PORT}/locations_api/locations/persons/{person_id}?start_date={start_date}&end_date={end_date}', auth=('user', 'pass'))
+        #return locations.json()
+
+        return locations

@@ -6,7 +6,7 @@ import sqlalchemy
 from sqlalchemy import func, and_, or_
 
 from app import db
-from app.udaconnect.locations_client import LocationsClient
+from .locations_client import LocationsClient
 from app.udaconnect.models import Connection, Location, Person
 from app.udaconnect.schemas import ConnectionSchema, LocationSchema, PersonSchema
 from geoalchemy2.functions import ST_AsText, ST_Point
@@ -46,7 +46,7 @@ class ConnectionService:
         for loc in locations:
             conditions.append(and_(
                 text(
-                    f"ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint({loc.get('latitude')},{loc.get('longitude')}),4326)::geography, {meters})")
+                    f"ST_DWithin(coordinate::geography,ST_SetSRID(ST_MakePoint({loc.latitude},{loc.longitude}),4326)::geography, {meters})")
                 ,
                 Location.person_id != int(person_id),
                 start_date <= Location.creation_time,

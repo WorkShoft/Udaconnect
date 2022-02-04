@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+
+message LocationMessage {
+  /*
+  Represents a Udaconnect Location object
+  */
+  
+  int32 id = 1;
+  string creation_time = 2;
+  float longitude = 3;
+  float latitude = 4;
+  int32 person_id = 5;
+}
+
+message LocationMessageList {
+  /*
+  Represents a list of Udaconnect Location objects
+  */
+  
+  repeated LocationMessage locations = 1;
+}
+
+message Request {
+  /*
+  Represents a request including a person ID
+  */
+  
+  int32 person_id = 1;
+  string start_date = 2;
+  string end_date = 3;
+}
+
+service LocationService {
+  /*
+  Udaconnect Location List service
+  */
+  
+  rpc Create(Request) returns (LocationMessageList);
+}
