@@ -36,5 +36,5 @@ service LocationService {
   Udaconnect Location List service
   */
   
-  rpc Create(Request) returns (LocationMessageList);
+  rpc Get(Request) returns (LocationMessageList);
 }
