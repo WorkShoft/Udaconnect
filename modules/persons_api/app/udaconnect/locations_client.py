@@ -5,7 +5,8 @@ LOCATIONS_HOST = "localhost"
 GRPC_PORT = 5005
 channel = grpc.insecure_channel(f"localhost:{GRPC_PORT}")
 
-from modules.grpc_app import location_pb2, location_pb2_grpc
+from grpc_server import location_pb2_grpc
+from grpc_server import location_pb2
 
 stub = location_pb2_grpc.LocationServiceStub(channel)
 
@@ -27,6 +28,6 @@ class LocationsClient:
             end_date=end_date.strftime("%Y-%m-%d"),
         )
 
-        response = stub.Create(request)
+        response = stub.Get(request)
 
         return response.locations
