@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  FLASK_ENV: "dev"
+  FLASK_DEBUG: "1"
+metadata:
+  name: flask-env-dev
