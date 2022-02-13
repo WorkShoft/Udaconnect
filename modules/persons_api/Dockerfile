@@ -1,10 +1,12 @@
-FROM python:3.7-alpine
+FROM python:3.7-buster
 
 WORKDIR .
 
-RUN apk add --no-cache gcc musl-dev linux-headers geos libc-dev postgresql-dev
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY requirements/base.txt base.txt
+COPY requirements/grpc.txt grpc.txt
+RUN pip install --upgrade pip
+RUN pip install -r base.txt
+RUN pip install -r grpc.txt
 
 EXPOSE 5000
 

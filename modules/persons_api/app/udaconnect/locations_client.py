@@ -1,14 +1,13 @@
 import grpc
+from app.location_pb2_grpc import LocationServiceStub
+from app.location_pb2 import Request
 
 LOCATIONS_PORT = "5001"
 LOCATIONS_HOST = "localhost"
 GRPC_PORT = 5005
 channel = grpc.insecure_channel(f"localhost:{GRPC_PORT}")
 
-from grpc_server import location_pb2_grpc
-from grpc_server import location_pb2
-
-stub = location_pb2_grpc.LocationServiceStub(channel)
+stub = LocationServiceStub(channel)
 
 
 class LocationsClient:
@@ -22,7 +21,7 @@ class LocationsClient:
         :return:
         """
 
-        request = location_pb2.Request(
+        request = Request(
             person_id=int(person_id),
             start_date=start_date.strftime("%Y-%m-%d"),
             end_date=end_date.strftime("%Y-%m-%d"),
