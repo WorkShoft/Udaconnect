@@ -60,4 +60,9 @@ spec:
             configMapKeyRef:
               name: db-env
               key: DB_PORT
+        - name: GRPC_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: grpc-port
+              key: GRPC_PORT
       restartPolicy: Always
