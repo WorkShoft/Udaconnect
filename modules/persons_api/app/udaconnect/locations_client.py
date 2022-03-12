@@ -7,7 +7,14 @@ from app.location_pb2 import Request
 LOCATIONS_PORT = "5001"
 LOCATIONS_HOST = "localhost"
 GRPC_PORT = os.environ.get("GPRC_PORT", 5005)
-channel = grpc.insecure_channel(f"localhost:{GRPC_PORT}")
+GRPC_HOST = os.environ.get("GRPC_HOST", "grpc-server")
+
+channel = grpc.insecure_channel(f"{GRPC_HOST}:{GRPC_PORT}", options=(('grpc.enable_http_proxy', 0),))
+
+if os.environ.get('https_proxy'):
+    del os.environ['https_proxy']
+if os.environ.get('http_proxy'):
+    del os.environ['http_proxy']
 
 stub = LocationServiceStub(channel)
 

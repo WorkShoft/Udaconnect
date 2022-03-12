@@ -60,4 +60,14 @@ spec:
             configMapKeyRef:
               name: db-env
               key: DB_PORT
+        - name: GRPC_TRACE
+          valueFrom:
+            configMapKeyRef:
+              name: grpc-trace
+              key: GRPC_TRACE
+        - name: GRPC_VERBOSITY
+          valueFrom:
+            configMapKeyRef:
+              name: grpc-trace
+              key: GRPC_VERBOSITY
       restartPolicy: Always

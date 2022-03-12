@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  GRPC_TRACE: "all"
+  GRPC_VERBOSITY: "DEBUG"
+metadata:
+  name: grpc-trace
