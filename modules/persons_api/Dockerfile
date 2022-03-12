@@ -11,4 +11,5 @@ RUN pip install -r grpc.txt
 EXPOSE 5000
 
 COPY . .
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["python", "wsgi.py"]
+# CMD ["flask", "run", "--host", "0.0.0.0"]

@@ -1,10 +1,12 @@
+import os
+
 import grpc
 from app.location_pb2_grpc import LocationServiceStub
 from app.location_pb2 import Request
 
 LOCATIONS_PORT = "5001"
 LOCATIONS_HOST = "localhost"
-GRPC_PORT = 5005
+GRPC_PORT = os.environ.get("GPRC_PORT", 5005)
 channel = grpc.insecure_channel(f"localhost:{GRPC_PORT}")
 
 stub = LocationServiceStub(channel)
