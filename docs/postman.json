@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "146442f1-4580-475f-8914-dc0e0e7e2c6d",
+		"name": "udaconnect K3S",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Persons 2022-01-01 - 2022-06-06",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "es-ES,en-US;q=0.7,en;q=0.3"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:30001/"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Cookie",
+						"value": "csrftoken=6iUUOcDnxH8cJ3aY7KHApocV5OSOz0YEvnxbuaKACpzOG5TwSkmSrbxjRIHoFfdF"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin"
+					}
+				],
+				"url": {
+					"raw": "0.0.0.0:30001/api/persons/1?start_date=2022-01-01&end_date=2022-06-06",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "30001",
+					"path": [
+						"api",
+						"persons",
+						"1"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "end_date",
+							"value": "2022-06-06"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Persons 2022-01-01 - 2022-06-06 Page 1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "es-ES,en-US;q=0.7,en;q=0.3"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:30001/"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Cookie",
+						"value": "csrftoken=6iUUOcDnxH8cJ3aY7KHApocV5OSOz0YEvnxbuaKACpzOG5TwSkmSrbxjRIHoFfdF"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin"
+					}
+				],
+				"url": {
+					"raw": "0.0.0.0:30001/api/persons/1/connection?start_date=2020-03-06&end_date=2022-01-01&page=1",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "30001",
+					"path": [
+						"api",
+						"persons",
+						"1",
+						"connection"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2020-03-06"
+						},
+						{
+							"key": "end_date",
+							"value": "2022-01-01"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Persons",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "es-ES,en-US;q=0.7,en;q=0.3"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:30001/"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Cookie",
+						"value": "csrftoken=6iUUOcDnxH8cJ3aY7KHApocV5OSOz0YEvnxbuaKACpzOG5TwSkmSrbxjRIHoFfdF"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin"
+					}
+				],
+				"url": {
+					"raw": "0.0.0.0:30001/api/persons",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "30001",
+					"path": [
+						"api",
+						"persons"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Location",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "es-ES,en-US;q=0.7,en;q=0.3"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:30001/"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Cookie",
+						"value": "csrftoken=6iUUOcDnxH8cJ3aY7KHApocV5OSOz0YEvnxbuaKACpzOG5TwSkmSrbxjRIHoFfdF"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"person_id\": 5,\n    \"latitude\": \"22.500\",\n    \"longitude\": \"31.300\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "0.0.0.0:30002/api/locations?person_id=5&longitude=\"22.500\"&latitude=\"30.500\"",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "30002",
+					"path": [
+						"api",
+						"locations"
+					],
+					"query": [
+						{
+							"key": "person_id",
+							"value": "5"
+						},
+						{
+							"key": "longitude",
+							"value": "\"22.500\""
+						},
+						{
+							"key": "latitude",
+							"value": "\"30.500\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Location",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "es-ES,en-US;q=0.7,en;q=0.3"
+					},
+					{
+						"key": "Accept-Encoding",
+						"value": "gzip, deflate"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:30001/"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Cookie",
+						"value": "csrftoken=6iUUOcDnxH8cJ3aY7KHApocV5OSOz0YEvnxbuaKACpzOG5TwSkmSrbxjRIHoFfdF"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-origin"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"person_id\": 5,\n    \"latitude\": \"22.500\",\n    \"longitude\": \"31.300\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "0.0.0.0:30002/api/locations/29",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "30002",
+					"path": [
+						"api",
+						"locations",
+						"29"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
