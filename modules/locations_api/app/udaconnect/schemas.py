@@ -15,6 +15,14 @@ class LocationSchema(Schema):
         model = Location
 
 
+class LocationCreateSchema(Schema):
+    person_id = fields.Integer()
+    longitude = fields.String(attribute="longitude")
+    latitude = fields.String(attribute="latitude")
+
+    class Meta:
+        model = Location
+
 class PersonSchema(Schema):
     id = fields.Integer()
     first_name = fields.String()

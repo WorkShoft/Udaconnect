@@ -1,0 +1,68 @@
+Making a request
+===============================
+To make a request, call the endpoint 0.0.0.0:30005 with the following parameters:
+- person_id
+- start_date
+- end_date
+
+For example, if you want to obtain Location's of person #6 between 2019-01-02 and 2020-07-05, you can use this request body:
+{
+    "person_id": 6,
+    "start_date": "2019-01-02",
+    "end_date": "2020-07-05"
+ }
+
+The response should look like this:
+{
+    "locations": [
+        {
+            "id": 46,
+            "creation_time": "2020-04-07",
+            "longitude": -106.57218170166016,
+            "latitude": 35.058563232421875,
+            "person_id": 6
+        },
+        {
+            "id": 47,
+            "creation_time": "2020-05-01",
+            "longitude": -106.57218170166016,
+            "latitude": 35.058563232421875,
+            "person_id": 6
+        },
+        {
+            "id": 64,
+            "creation_time": "2020-01-05",
+            "longitude": -106.57195281982422,
+            "latitude": 35.05851364135742,
+            "person_id": 6
+        }
+    ]
+}
+
+Message reference
+===============================
+LocationMessage
+- Represents a Udaconnect Location object
+- Attributes:
+  int32 id = 1;
+  string creation_time = 2;
+  float longitude = 3;
+  float latitude = 4;
+  int32 person_id = 5;
+
+LocationMessageList
+- Represents a list of Udaconnect Location objects
+- Attributes:
+  repeated LocationMessage locations = 1;
+
+Request
+- Represents a request including a person ID
+- Attributes:
+  int32 person_id = 1;
+  string start_date = 2;
+  string end_date = 3;
+
+LocationService
+- Udaconnect Location List service
+- Methods:
+  rpc Get(Request) returns (LocationMessageList);

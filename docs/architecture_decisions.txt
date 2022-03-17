@@ -1,0 +1,7 @@
+I decided to split the initial monolith into Locations and Persons microservices because they are concerned with different functionality and it makes sense that are run and managed separately.
+
+When it comes to the gRPC Location service, it helps with latency and decoupling the Locations and Persons services.
+
+Even if the Locations service is being overloaded with requests, the Persons API can still consume Location data via the gRPC endpoint.
+
+I decided to offload Location creation process to Kafka to allow for real-time Location creation that would otherwise overload the Locations API.

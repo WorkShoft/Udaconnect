@@ -29,9 +29,16 @@ We will be installing the tools that we'll need to use for getting our environme
 3. [Set up `kubectl`](https://rancher.com/docs/rancher/v2.x/en/cluster-admin/cluster-access/kubectl/)
 4. [Install VirtualBox](https://www.virtualbox.org/wiki/Downloads) with at least version 6.0
 5. [Install Vagrant](https://www.vagrantup.com/docs/installation) with at least version 2.0
+6. [Install Helm](https://helm.sh/docs/intro/install/)
 
 ### Environment Setup
 To run the application, you will need a K8s cluster running locally and to interface with it via `kubectl`. We will be using Vagrant with VirtualBox to run K3s.
+
+### Install Bitnami Kafka using Helm Charts
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install kafka-bitnami bitnami/kafka
+```
 
 #### Initialize K3s
 In this project's root, run `vagrant up`. 

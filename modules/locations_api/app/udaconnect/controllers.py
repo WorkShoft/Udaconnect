@@ -1,15 +1,12 @@
 from datetime import datetime
-from typing import List
 
-from app import db
-from app.udaconnect.models import Connection, Location, Person
+from app import db, kafka_producer
+from app.udaconnect.models import Location
 from app.udaconnect.schemas import (
-    ConnectionSchema,
-    LocationSchema,
-    PersonSchema,
+    LocationSchema, LocationCreateSchema,
 )
 from app.udaconnect.services import LocationService
-from flask import request
+from flask import request, json
 from flask_accepts import accepts, responds
 from flask_restx import Namespace, Resource
 
@@ -25,12 +22,12 @@ api = Namespace("Locations API", description="Connections via geolocation.")  # 
 @api.route("/locations/<location_id>")
 @api.param("location_id", "Unique ID for a given Location", _in="query")
 class LocationResource(Resource):
-    @accepts(schema=LocationSchema)
+    @accepts(schema=LocationCreateSchema)
     @responds(schema=LocationSchema)
     def post(self) -> Location:
-        request.get_json()
-        location: Location = LocationService.create(request.get_json())
-        return location
+        kafka_producer.send("locations", request.data)
+
+        return request.get_json()
 
     @responds(schema=LocationSchema)
     def get(self, location_id) -> Location:
@@ -59,7 +56,11 @@ class LocationResource(Resource):
 
     @responds(schema=LocationSchema)
     def post(self):
+        topic_name = "locations"
         data = api.payload
+
+        kafka_producer.send(topic_name, json.dumps(data))
+
         return data
 
         # end_date = request.args.get("end_date")

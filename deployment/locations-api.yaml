@@ -65,4 +65,9 @@ spec:
             configMapKeyRef:
               name: grpc-port
               key: GRPC_PORT
+        - name: KAFKA_URI
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-uri
+              key: KAFKA_URI
       restartPolicy: Always
