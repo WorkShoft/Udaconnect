@@ -1,6 +1,9 @@
 import json
 import os
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 from kafka import KafkaConsumer
 from kafka.errors import NoBrokersAvailable
 
