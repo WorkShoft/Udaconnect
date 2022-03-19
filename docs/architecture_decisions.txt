@@ -5,3 +5,5 @@ When it comes to the gRPC Location service, it helps with latency and decoupling
 Even if the Locations service is being overloaded with requests, the Persons API can still consume Location data via the gRPC endpoint.
 
 I decided to offload Location creation process to Kafka to allow for real-time Location creation that would otherwise overload the Locations API.
+
+To provide REST API Swagger / OpenAPI documentation, I have decided to use Flask RestX. Swagger docs are available at 0.0.0.0:30001 and 0.0.0.0:30002.
